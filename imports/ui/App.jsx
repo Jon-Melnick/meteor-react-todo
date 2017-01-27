@@ -22,6 +22,7 @@ class App extends Component {
     Tasks.insert({
       text,
       createdAt: new Date(),
+      checked: false,
     });
 
     ReactDOM.findDOMNode(this.refs.textInput).value = '';
