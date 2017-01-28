@@ -24,7 +24,16 @@ class App extends Component {
       filteredTasks = filteredTasks.filter(t=>!t.checked);
     }
     return filteredTasks.map(task=>{
-      return <Task key={task._id} task={task} />
+      const currentUserId = this.props.currentUser && this.props.currentUser._id
+      const showPrivateButton = task.owner === currentUserId;
+
+      return (
+        <Task
+          key={task._id}
+          task={task}
+          showPrivateButton={showPrivateButton}
+        />
+      );
     });
   }
 
@@ -88,6 +97,8 @@ App.propTypes = {
 };
 
 export default createContainer(()=>{
+  Meteor.subscribe('tasks');
+
   return {
     tasks: Tasks.find({}, { sort: { createdAt: -1 } }).fetch(),
     incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
